@@ -1,40 +1,42 @@
-package br.com.AulaJPA;
-	
+package br.com.VitrineCar.persistence;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import br.com.VitrineCar.entidade.Veiculo;
+
 import java.util.List;
 
-public class PessoaDAO {
-	EntityManagerFactory emf = Persistence.createEntityManagerFactory("crud-basic");
-    EntityManager em = emf.createEntityManager();
-    
-    public void salvar(Pessoa pessoa) {
+public class VeiculoDAO {
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("crud-basic");
+
+    public void salvar(Veiculo veiculo) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.persist(pessoa);
+        em.persist(veiculo);
         em.getTransaction().commit();
         em.close();
     }
 
-    public Pessoa buscarPorId(Long id) {
+    public Veiculo buscarPorId(Long id) {
         EntityManager em = emf.createEntityManager();
-        Pessoa pessoa = em.find(Pessoa.class, id);
+        Veiculo veiculo = em.find(Veiculo.class, id);
         em.close();
-        return pessoa;
+        return veiculo;
     }
 
-    public List<Pessoa> listar() {
+    public List<Veiculo> listar() {
         EntityManager em = emf.createEntityManager();
-        List<Pessoa> pessoas = em.createQuery("FROM Pessoa", Pessoa.class).getResultList();
+        List<Veiculo> veiculos = em.createQuery("FROM Veiculo", Veiculo.class).getResultList();
         em.close();
-        return pessoas;
+        return veiculos;
     }
 
-    public void atualizar(Pessoa pessoa) {
+    public void atualizar(Veiculo veiculo) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.merge(pessoa);
+        em.merge(veiculo);
         em.getTransaction().commit();
         em.close();
     }
@@ -42,9 +44,9 @@ public class PessoaDAO {
     public void remover(Long id) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Pessoa pessoa = em.find(Pessoa.class, id);
-        if (pessoa != null) {
-            em.remove(pessoa);
+        Veiculo veiculo = em.find(Veiculo.class, id);
+        if (veiculo != null) {
+            em.remove(veiculo);
         }
         em.getTransaction().commit();
         em.close();
