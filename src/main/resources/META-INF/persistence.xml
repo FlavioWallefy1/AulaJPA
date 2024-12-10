@@ -1,0 +1,29 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="crud-basic">
+        <!-- Lista das classes do seu projeto -->
+        <class>br.com.AulaJPA.Marca</class>
+        <class>br.com.AulaJPA.Modelo</class>
+        <class>br.com.AulaJPA.Usuario</class>
+        <class>br.com.AulaJPA.Perfil</class>
+        <class>br.com.AulaJPA.Veiculo</class>
+        <class>br.com.AulaJPA.Tag</class>
+        <class>br.com.AulaJPA.Categoria</class>
+        
+        <!-- Propriedades da conexão com o banco de dados -->
+        <properties>
+            <!-- Configurações para o banco H2 -->
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:testdb"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+
+            <!-- Configurações do Hibernate -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+
+            <!-- Configuração de logs -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
