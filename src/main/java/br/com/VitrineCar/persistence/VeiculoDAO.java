@@ -2,6 +2,7 @@ package br.com.VitrineCar.persistence;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 import br.com.VitrineCar.entidade.Veiculo;
@@ -10,6 +11,15 @@ import java.util.List;
 
 public class VeiculoDAO {
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("crud-basic");
+
+    public List<Veiculo> listar() {
+        EntityManager em = emf.createEntityManager();
+        List<Veiculo> veiculos = em.createQuery(
+                "SELECT DISTINCT v FROM Veiculo v LEFT JOIN FETCH v.tags", Veiculo.class
+        ).getResultList();
+        em.close();
+        return veiculos;
+    }
 
     public void salvar(Veiculo veiculo) {
         EntityManager em = emf.createEntityManager();
@@ -26,11 +36,17 @@ public class VeiculoDAO {
         return veiculo;
     }
 
-    public List<Veiculo> listar() {
+    public Veiculo buscarPorPlaca(String placa) {
         EntityManager em = emf.createEntityManager();
-        List<Veiculo> veiculos = em.createQuery("FROM Veiculo", Veiculo.class).getResultList();
-        em.close();
-        return veiculos;
+        try {
+            return em.createQuery("FROM Veiculo WHERE placa = :placa", Veiculo.class)
+                     .setParameter("placa", placa)
+                     .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
     }
 
     public void atualizar(Veiculo veiculo) {
@@ -52,4 +68,3 @@ public class VeiculoDAO {
         em.close();
     }
 }
-
