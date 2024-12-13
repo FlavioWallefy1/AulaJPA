@@ -1,11 +1,8 @@
 package br.com.VitrineCar.persistence;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import br.com.VitrineCar.entidade.Usuario;
 
+import javax.persistence.*;
 import java.util.List;
 
 public class UsuarioDAO {
@@ -52,4 +49,3 @@ public class UsuarioDAO {
         em.close();
     }
 }
-

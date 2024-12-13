@@ -6,7 +6,7 @@ import br.com.VitrineCar.persistence.*;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
+public class Main_Veiculos {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
