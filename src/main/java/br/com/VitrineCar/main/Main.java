@@ -67,6 +67,8 @@ public class Main {
         }
     }
 
+    
+    
     private static void inicializarTags(TagDAO tagDAO) {
         String[] tagsIniciais = {"Teto Solar", "Ar Condicionado", "Bancos de Couro", "Vidros Elétricos", "Sensor de Estacionamento"};
         for (String nomeTag : tagsIniciais) {
@@ -78,6 +80,8 @@ public class Main {
         }
     }
 
+    
+    
     private static void cadastrarVeiculo(Scanner scanner, VeiculoDAO veiculoDAO, ModeloDAO modeloDAO, MarcaDAO marcaDAO, CategoriaDAO categoriaDAO, TagDAO tagDAO) {
         System.out.println("\n=== Cadastro de Veículo ===");
 
@@ -130,16 +134,22 @@ public class Main {
 
         System.out.println("Selecione os opcionais digitando o número correspondente (digite 0 para encerrar):");
         while (true) {
-            System.out.print("Escolha uma opção: ");
-            int opcao = Integer.parseInt(scanner.nextLine());
-            if (opcao == 0) {
-                break;
-            }
-            if (opcao > 0 && opcao <= tagsDisponiveis.size()) {
-                veiculo.getTags().add(tagsDisponiveis.get(opcao - 1));
-            } else {
-                System.out.println("Opção inválida. Tente novamente.");
-            }
+        	 try {
+                 System.out.print("Escolha uma opção: ");
+                 String input = scanner.nextLine();
+                 int opcao = Integer.parseInt(input);
+
+                 if (opcao == 0) {
+                     break; // Encerrar seleção de tags
+                 }
+                 if (opcao > 0 && opcao <= tagsDisponiveis.size()) {
+                     veiculo.getTags().add(tagsDisponiveis.get(opcao - 1));
+                 } else {
+                     System.out.println("Erro: Opção inválida. Escolha um número entre 1 e " + tagsDisponiveis.size() + ".");
+                 }
+             } catch (NumberFormatException e) {
+                 System.out.println("Erro: Entrada inválida. Por favor, digite um número.");
+             }
         }
 
         // Salvar Veículo
@@ -150,6 +160,8 @@ public class Main {
         }
     }
 
+    
+    
     private static void listarVeiculos(VeiculoDAO veiculoDAO) {
         System.out.println("\n=== Lista de Veículos ===");
         List<Veiculo> veiculos = veiculoDAO.listar();
@@ -189,9 +201,40 @@ public class Main {
             return;
         }
 
-        // Atualizar informações do Veículo
-        System.out.print("Informe a nova placa do veículo (atual: " + veiculo.getPlaca() + "): ");
-        veiculo.setPlaca(scanner.nextLine());
+        // Atualizar informações da Marca
+        System.out.print("Informe a nova marca (atual: " + veiculo.getModelo().getMarca().getNome() + "): ");
+        String nomeMarca = scanner.nextLine();
+        Marca novaMarca = new Marca();
+        novaMarca.setNome(nomeMarca);
+        marcaDAO.salvar(novaMarca);
+
+        // Atualizar informações do Modelo
+        System.out.print("Informe o novo modelo (atual: " + veiculo.getModelo().getNome() + "): ");
+        String nomeModelo = scanner.nextLine();
+        Modelo novoModelo = new Modelo();
+        novoModelo.setNome(nomeModelo);
+        novoModelo.setMarca(novaMarca);
+        modeloDAO.salvar(novoModelo);
+
+        // Atualizar informações da Categoria
+        System.out.print("Informe a nova categoria (atual: " + veiculo.getCategoria().getNome() + "): ");
+        String nomeCategoria = scanner.nextLine();
+        Categoria novaCategoria = new Categoria();
+        novaCategoria.setNome(nomeCategoria);
+        categoriaDAO.salvar(novaCategoria);
+
+        // Atualizar informações da Placa
+        String novaPlaca;
+        while (true) {
+            System.out.print("Informe a nova placa do veículo (atual: " + veiculo.getPlaca() + "): ");
+            novaPlaca = scanner.nextLine();
+            Veiculo veiculoExistente = veiculoDAO.buscarPorPlaca(novaPlaca);
+            if (veiculoExistente == null || veiculoExistente.getId().equals(veiculo.getId())) {
+                break; // Placa não existe ou pertence ao mesmo veículo
+            }
+            System.out.println("Erro: Já existe outro veículo cadastrado com essa placa. Tente novamente.");
+        }
+        veiculo.setPlaca(novaPlaca);
 
         // Atualizar Tags
         System.out.println("\nOpcionais disponíveis:");
@@ -203,22 +246,35 @@ public class Main {
         System.out.println("Selecione os opcionais digitando o número correspondente (digite 0 para encerrar):");
         veiculo.getTags().clear(); // Limpar tags existentes
         while (true) {
-            System.out.print("Escolha uma opção: ");
-            int opcao = Integer.parseInt(scanner.nextLine());
-            if (opcao == 0) {
-                break;
-            }
-            if (opcao > 0 && opcao <= tagsDisponiveis.size()) {
-                veiculo.getTags().add(tagsDisponiveis.get(opcao - 1));
-            } else {
-                System.out.println("Opção inválida. Tente novamente.");
-            }
+        	 try {
+                 System.out.print("Escolha uma opção: ");
+                 String input = scanner.nextLine();
+                 int opcao = Integer.parseInt(input);
+
+                 if (opcao == 0) {
+                     break; // Encerrar seleção de tags
+                 }
+                 if (opcao > 0 && opcao <= tagsDisponiveis.size()) {
+                     veiculo.getTags().add(tagsDisponiveis.get(opcao - 1));
+                 } else {
+                     System.out.println("Erro: Opção inválida. Escolha um número entre 1 e " + tagsDisponiveis.size() + ".");
+                 }
+             } catch (NumberFormatException e) {
+                 System.out.println("Erro: Entrada inválida. Por favor, digite um número.");
+             }
         }
 
+        // Atualizar o veículo no banco de dados
+        veiculo.setModelo(novoModelo);
+        veiculo.setCategoria(novaCategoria);
         veiculoDAO.atualizar(veiculo);
+
         System.out.println("Veículo atualizado com sucesso!");
     }
 
+
+    
+    
     private static void removerVeiculo(Scanner scanner, VeiculoDAO veiculoDAO) {
         System.out.println("\n=== Remover Veículo ===");
         System.out.print("Informe o ID do veículo que deseja remover: ");
