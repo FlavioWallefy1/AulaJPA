@@ -2,7 +2,6 @@ package br.com.VitrineCar.main;
 
 import br.com.VitrineCar.entidade.*;
 import br.com.VitrineCar.persistence.*;
-
 import java.util.List;
 import java.util.Scanner;
 

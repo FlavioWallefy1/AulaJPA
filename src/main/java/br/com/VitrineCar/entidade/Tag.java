@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,6 +19,9 @@ public class Tag {
     @Column(nullable = false, unique = true)
     private String nome;
 
+    @ManyToMany(mappedBy = "tags")
+    private List<Veiculo> veiculos = new ArrayList<>();
+    
     // Getters e Setters
     public Long getId() {
         return id;
@@ -33,4 +38,13 @@ public class Tag {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+	public List<Veiculo> getVeiculos() {
+		return veiculos;
+	}
+
+	public void setVeiculos(List<Veiculo> veiculos) {
+		this.veiculos = veiculos;
+	}
+    
 }
